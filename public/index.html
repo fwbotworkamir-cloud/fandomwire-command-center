@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FandomWire Command Center — March 19, 2026</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --card-hover: #1a1a26;
+    --border: #2a2a3a;
+    --accent: #f97316;
+    --accent2: #3b82f6;
+    --accent3: #10b981;
+    --accent4: #a855f7;
+    --accent5: #ef4444;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-bright: #ffffff;
+    --immediate: #ef4444;
+    --short: #f97316;
+    --evergreen: #10b981;
+    --high: #ef4444;
+    --medium: #f97316;
+    --low: #10b981;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .header {
+    background: linear-gradient(135deg, #1a1028 0%, #0f172a 50%, #0a1628 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .logo { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, var(--accent), #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .header-sub { color: var(--text-dim); font-size: 13px; margin-top: 2px; }
+  .header-date { color: var(--text-dim); font-size: 14px; text-align: right; }
+  .header-date strong { color: var(--accent); display: block; font-size: 16px; }
+
+  .status-bar {
+    display: flex; gap: 24px; padding: 12px 32px;
+    background: rgba(249, 115, 22, 0.05); border-bottom: 1px solid var(--border);
+  }
+  .status-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); cursor: pointer; transition: color 0.2s; }
+  .status-item:hover { color: var(--accent); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent3); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .tabs {
+    display: flex; gap: 0; padding: 0 32px; background: var(--card);
+    border-bottom: 1px solid var(--border); overflow-x: auto;
+  }
+  .tab {
+    padding: 14px 24px; font-size: 13px; font-weight: 600; color: var(--text-dim);
+    cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;
+    white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .content { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; transition: all 0.2s;
+  }
+  .card:hover { background: var(--card-hover); border-color: rgba(249,115,22,0.3); }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .card-title { font-size: 15px; font-weight: 700; color: var(--text-bright); line-height: 1.3; }
+  .card-sub { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+  .badge {
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+  }
+  .badge-immediate { background: rgba(239,68,68,0.15); color: var(--immediate); }
+  .badge-short { background: rgba(249,115,22,0.15); color: var(--short); }
+  .badge-evergreen { background: rgba(16,185,129,0.15); color: var(--evergreen); }
+  .badge-anime { background: rgba(168,85,247,0.15); color: var(--accent4); }
+  .badge-gaming { background: rgba(59,130,246,0.15); color: var(--accent2); }
+  .badge-marvel { background: rgba(239,68,68,0.15); color: var(--accent5); }
+  .badge-streaming { background: rgba(16,185,129,0.15); color: var(--accent3); }
+  .badge-high { background: rgba(239,68,68,0.15); color: var(--high); }
+  .badge-medium { background: rgba(249,115,22,0.15); color: var(--medium); }
+
+  .section-title {
+    font-size: 18px; font-weight: 700; color: var(--text-bright); margin-bottom: 16px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title .icon { font-size: 20px; }
+
+  .table-wrap { overflow-x: auto; margin-top: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 12px; color: var(--text-dim); font-weight: 600; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 10px 12px; border-bottom: 1px solid rgba(42,42,58,0.5); color: var(--text); }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .cluster-map {
+    background: rgba(59,130,246,0.05); border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 8px; padding: 16px; margin-top: 12px;
+  }
+  .cluster-pillar {
+    font-size: 14px; font-weight: 700; color: var(--accent2);
+    padding: 10px 14px; background: rgba(59,130,246,0.1); border-radius: 6px;
+    margin-bottom: 10px; text-align: center;
+  }
+  .cluster-support {
+    display: flex; flex-direction: column; gap: 6px; padding-left: 20px;
+    border-left: 2px solid rgba(59,130,246,0.3); margin-left: 16px;
+  }
+  .cluster-item {
+    font-size: 12px; color: var(--text); padding: 6px 10px;
+    background: rgba(255,255,255,0.03); border-radius: 4px;
+  }
+  .cluster-item strong { color: var(--accent2); }
+
+  .revenue-card {
+    background: linear-gradient(135deg, rgba(249,115,22,0.08), rgba(249,115,22,0.02));
+    border: 1px solid rgba(249,115,22,0.2);
+  }
+  .revenue-amount { font-size: 22px; font-weight: 800; color: var(--accent); }
+
+  .bd-card { position: relative; overflow: hidden; }
+  .bd-card::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+    background: var(--accent); border-radius: 3px 0 0 3px;
+  }
+
+  .metric-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+  .metric-box {
+    flex: 1; min-width: 140px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; text-align: center;
+  }
+  .metric-value { font-size: 28px; font-weight: 800; color: var(--accent); }
+  .metric-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .widget-preview {
+    background: rgba(16,185,129,0.05); border: 1px dashed rgba(16,185,129,0.3);
+    border-radius: 8px; padding: 14px; margin-top: 8px;
+  }
+  .widget-preview .label { font-size: 10px; color: var(--accent3); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; background: rgba(255,255,255,0.06); color: var(--text-dim); }
+
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent3)); }
+
+  .alert-banner {
+    background: linear-gradient(90deg, rgba(239,68,68,0.1), rgba(239,68,68,0.03));
+    border: 1px solid rgba(239,68,68,0.3); border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .alert-banner .alert-icon { font-size: 20px; }
+  .alert-banner .alert-text { font-size: 13px; color: var(--text); }
+  .alert-banner .alert-text strong { color: var(--accent5); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div>
+      <div class="logo">FandomWire Command Center</div>
+      <div class="header-sub">AI Operating System V4 — Full System Run</div>
+    </div>
+  </div>
+  <div class="header-date">
+    <strong>March 19, 2026</strong>
+    All Modules Active
+  </div>
+</div>
+
+<div class="status-bar">
+  <div class="status-item" onclick="showPanel('discover')"><div class="status-dot"></div> Discover Engine</div>
+  <div class="status-item" onclick="showPanel('editorial')"><div class="status-dot"></div> Editorial Intelligence</div>
+  <div class="status-item" onclick="showPanel('seo')"><div class="status-dot"></div> SEO Engine</div>
+  <div class="status-item" onclick="showPanel('monetization')"><div class="status-dot"></div> Monetization</div>
+  <div class="status-item" onclick="showPanel('bd')"><div class="status-dot"></div> Business Development</div>
+  <div class="status-item" onclick="showPanel('system')"><div class="status-dot"></div> Dashboard Intel</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPanel('overview')">Overview</div>
+  <div class="tab" onclick="showPanel('discover')">Discover</div>
+  <div class="tab" onclick="showPanel('editorial')">Editorial</div>
+  <div class="tab" onclick="showPanel('seo')">SEO Clusters</div>
+  <div class="tab" onclick="showPanel('monetization')">Monetization</div>
+  <div class="tab" onclick="showPanel('bd')">Business Dev</div>
+  <div class="tab" onclick="showPanel('system')">System</div>
+</div>
+
+<div class="content">
+
+  <!-- OVERVIEW -->
+  <div class="panel active" id="overview">
+    <div class="alert-banner">
+      <div class="alert-icon">🔴</div>
+      <div class="alert-text"><strong>LAUNCH DAY:</strong> Steel Ball Run premieres on Netflix TODAY + Crimson Desert launches at 6PM ET + JJK S3 Episode 11 drops. Publish review/recap content ASAP.</div>
+    </div>
+
+    <div class="metric-row">
+      <div class="metric-box">
+        <div class="metric-value">5</div>
+        <div class="metric-label">Publish Now</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value">3</div>
+        <div class="metric-label">Update</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value">2</div>
+        <div class="metric-label">SEO Clusters</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value">5</div>
+        <div class="metric-label">BD Targets</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value">$40K–$80K</div>
+        <div class="metric-label">Revenue Pipeline</div>
+      </div>
+    </div>
+
+    <div class="section-title"><span class="icon">🔥</span> Immediate Actions</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Steel Ball Run Ep 1 Review & Explained</div><div class="card-sub">Netflix premiere TODAY — first-mover advantage critical</div></div>
+          <div><span class="badge badge-immediate">Immediate</span></div>
+        </div>
+        <div class="tag-row"><span class="tag badge-anime">Anime</span><span class="tag">Netflix</span><span class="tag">JoJo</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Crimson Desert Review — Is It Worth It?</div><div class="card-sub">400K Steam pre-orders, Metacritic 79, launches 6PM ET</div></div>
+          <div><span class="badge badge-immediate">Immediate</span></div>
+        </div>
+        <div class="tag-row"><span class="tag badge-gaming">Gaming</span><span class="tag">Pearl Abyss</span><span class="tag">Launch Day</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">JJK Season 3 Episode 11 Recap</div><div class="card-sub">Episode airs today — Part 2 delayed to 2027</div></div>
+          <div><span class="badge badge-immediate">Immediate</span></div>
+        </div>
+        <div class="tag-row"><span class="tag badge-anime">Anime</span><span class="tag">Crunchyroll</span><span class="tag">JJK</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Daredevil Born Again S2 Preview</div><div class="card-sub">Premieres March 24 — Jessica Jones returns, James Wesley back</div></div>
+          <div><span class="badge badge-short">This Week</span></div>
+        </div>
+        <div class="tag-row"><span class="tag badge-marvel">Marvel</span><span class="tag">Disney+</span><span class="tag">MCU</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCOVER -->
+  <div class="panel" id="discover">
+    <div class="section-title"><span class="icon">📡</span> Trending Signals — Anime</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Steel Ball Run — Netflix Premiere</div></div>
+          <span class="badge badge-immediate">Now</span>
+        </div>
+        <div class="card-sub">Most hyped JoJo adaptation in history. Fans waited 10+ years. JOJOCARAVAN expanding to 17 US stores today. Social will explode tonight.</div>
+        <div class="tag-row"><span class="tag badge-anime">Anime</span><span class="tag">Netflix</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">JJK S3 Ep 11 + Part 2 Delay</div></div>
+          <span class="badge badge-immediate">Now</span>
+        </div>
+        <div class="card-sub">New episode TODAY. Season finale March 26. Massive news: Part 2 delayed to January 2027. Double search intent.</div>
+        <div class="tag-row"><span class="tag badge-anime">Anime</span><span class="tag">Crunchyroll</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Spring 2026 Anime Season</div></div>
+          <span class="badge badge-short">This Week</span>
+        </div>
+        <div class="card-sub">Re:Zero S4 (biggest show), Slime S4 (most voted in Japan), Dorohedoro S2 (6-year wait), Witch Hat Atelier, One Piece Elbaf Arc.</div>
+        <div class="tag-row"><span class="tag badge-anime">Anime</span><span class="tag">Preview</span></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:24px"><span class="icon">🎮</span> Trending Signals — Gaming</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Crimson Desert Launch</div></div>
+          <span class="badge badge-immediate">Now</span>
+        </div>
+        <div class="card-sub">Pearl Abyss open-world RPG launches 6PM ET. 400K Steam pre-orders. Metacritic 79 — polarizing reviews mean fans searching for takes.</div>
+        <div class="tag-row"><span class="tag badge-gaming">Gaming</span><span class="tag">PC/Console</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">March 26 Mega Release Day</div></div>
+          <span class="badge badge-short">Publish by 24th</span>
+        </div>
+        <div class="card-sub">Switch 2 titles, Screamer, multiple AAA games dropping same day. Biggest single-day release of 2026.</div>
+        <div class="tag-row"><span class="tag badge-gaming">Gaming</span><span class="tag">Switch 2</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">GTA 6 — Nov 19 Confirmed</div></div>
+          <span class="badge badge-evergreen">Evergreen</span>
+        </div>
+        <div class="card-sub">Biggest entertainment launch of 2026. GDC buzz fueling speculation. Update pillar weekly.</div>
+        <div class="tag-row"><span class="tag badge-gaming">Gaming</span><span class="tag">Rockstar</span></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:24px"><span class="icon">📺</span> Trending Signals — Streaming / TV</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Daredevil Born Again S2</div></div>
+          <span class="badge badge-short">March 24</span>
+        </div>
+        <div class="card-sub">8 weekly episodes. Jessica Jones returns. James Wesley revived. Matthew Lillard as Mr. Charles. Marvel podcast launched March 17.</div>
+        <div class="tag-row"><span class="tag badge-marvel">Marvel</span><span class="tag">Disney+</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Peaky Blinders: The Immortal Man</div></div>
+          <span class="badge badge-short">This Week</span>
+        </div>
+        <div class="card-sub">Netflix movie event. Massive existing fanbase transitioning from TV to film. Review + explained content.</div>
+        <div class="tag-row"><span class="tag badge-streaming">Streaming</span><span class="tag">Netflix</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">Invincible Returns</div></div>
+          <span class="badge badge-short">This Week</span>
+        </div>
+        <div class="card-sub">Fan-favorite animated series. Episode guide + timeline content. Loyal audience = guaranteed traffic.</div>
+        <div class="tag-row"><span class="tag badge-streaming">Streaming</span><span class="tag">Prime Video</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITORIAL -->
+  <div class="panel" id="editorial">
+    <div class="section-title"><span class="icon">✍️</span> Articles to Write TODAY</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>#</th><th>Title</th><th>Category</th><th>Why Now</th><th>Urgency</th><th>Impact</th></tr>
+        <tr>
+          <td>1</td>
+          <td style="color:var(--text-bright);font-weight:600">Steel Ball Run Episode 1 Review & Explained</td>
+          <td><span class="badge badge-anime">Anime</span></td>
+          <td>Premieres TODAY on Netflix</td>
+          <td><span class="badge badge-immediate">Immediate</span></td>
+          <td><span class="badge badge-high">High</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td style="color:var(--text-bright);font-weight:600">Crimson Desert Review — Is It Worth Buying?</td>
+          <td><span class="badge badge-gaming">Gaming</span></td>
+          <td>Launches TODAY 6PM ET, 400K pre-orders</td>
+          <td><span class="badge badge-immediate">Immediate</span></td>
+          <td><span class="badge badge-high">High</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td style="color:var(--text-bright);font-weight:600">JJK Season 3 Episode 11 Recap & Breakdown</td>
+          <td><span class="badge badge-anime">Anime</span></td>
+          <td>Airs TODAY + Part 2 delayed to 2027</td>
+          <td><span class="badge badge-immediate">Immediate</span></td>
+          <td><span class="badge badge-high">High</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td style="color:var(--text-bright);font-weight:600">Daredevil Born Again S2 — Everything to Know</td>
+          <td><span class="badge badge-marvel">Marvel</span></td>
+          <td>5 days out — capture early search traffic</td>
+          <td><span class="badge badge-short">This Week</span></td>
+          <td><span class="badge badge-high">High</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td style="color:var(--text-bright);font-weight:600">Crimson Desert Beginner's Guide — Tips & Combat</td>
+          <td><span class="badge badge-gaming">Gaming</span></td>
+          <td>Players searching for help within hours</td>
+          <td><span class="badge badge-immediate">Immediate</span></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section-title" style="margin-top:32px"><span class="icon">🔄</span> Articles to Update</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>#</th><th>Article</th><th>Action</th><th>Rationale</th></tr>
+        <tr>
+          <td>1</td>
+          <td style="color:var(--text-bright);font-weight:600">GTA 6 — Everything We Know</td>
+          <td>Add GDC 2026 info, confirm November date</td>
+          <td>Evergreen pillar — stale = lost traffic</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td style="color:var(--text-bright);font-weight:600">Best Switch 2 Games</td>
+          <td>Add March 26 releases, Pokopia, update rankings</td>
+          <td>Hardware is hot, list is outdated</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td style="color:var(--text-bright);font-weight:600">Spring 2026 Anime Preview</td>
+          <td>Add Japan survey rankings, Re:Zero S4, Slime S4</td>
+          <td>Pre-season window is NOW</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- SEO -->
+  <div class="panel" id="seo">
+    <div class="grid-2">
+      <div>
+        <div class="section-title"><span class="icon">🔵</span> Cluster 1: Steel Ball Run</div>
+        <div class="cluster-map">
+          <div class="cluster-pillar">PILLAR: Steel Ball Run — Complete Guide: Story, Characters, Netflix Schedule</div>
+          <div class="cluster-support">
+            <div class="cluster-item"><strong>Episode Reviews</strong> — "steel ball run episode [N] explained" → weekly traffic engine</div>
+            <div class="cluster-item"><strong>Character Guide</strong> — "johnny joestar explained" / "gyro zeppeli guide"</div>
+            <div class="cluster-item"><strong>Release Schedule</strong> — "steel ball run netflix schedule" → bookmarkable utility</div>
+            <div class="cluster-item"><strong>Anime vs Manga</strong> — "steel ball run differences" → comparison intent</div>
+            <div class="cluster-item"><strong>Best JoJo Parts Ranked</strong> — "best jojo parts 2026" → broad authority</div>
+            <div class="cluster-item"><strong>Stands Explained</strong> — "steel ball run stands powers" → deep dive</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-dim)">
+          <strong style="color:var(--accent2)">Link strategy:</strong> All existing JoJo content → this hub. Episode reviews link up to pillar. Schedule page drives repeat visits.
+        </div>
+      </div>
+      <div>
+        <div class="section-title"><span class="icon">🟠</span> Cluster 2: Crimson Desert</div>
+        <div class="cluster-map">
+          <div class="cluster-pillar" style="background:rgba(249,115,22,0.1);color:var(--accent)">PILLAR: Crimson Desert — Complete Guide: Review, Tips, Builds, Boss Fights</div>
+          <div class="cluster-support" style="border-color:rgba(249,115,22,0.3)">
+            <div class="cluster-item"><strong style="color:var(--accent)">Review</strong> — "crimson desert review worth it" → launch day traffic</div>
+            <div class="cluster-item"><strong style="color:var(--accent)">Beginner's Guide</strong> — "crimson desert tips" → high-utility evergreen</div>
+            <div class="cluster-item"><strong style="color:var(--accent)">Best Builds</strong> — "crimson desert builds combat" → player progression</div>
+            <div class="cluster-item"><strong style="color:var(--accent)">Boss Guide</strong> — "crimson desert boss fights" → search magnet</div>
+            <div class="cluster-item"><strong style="color:var(--accent)">vs Elden Ring</strong> — "crimson desert vs elden ring" → taps massive volume</div>
+            <div class="cluster-item"><strong style="color:var(--accent)">PC Performance</strong> — "crimson desert settings" → navigational intent</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-dim)">
+          <strong style="color:var(--accent)">Link strategy:</strong> Review drives initial wave. Guides capture long tail as players progress. Comparison piece taps Elden Ring audience.
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:32px"><span class="icon">🟢</span> Upcoming Cluster: Daredevil Born Again S2 (Start March 24)</div>
+    <div class="cluster-map" style="background:rgba(16,185,129,0.05);border-color:rgba(16,185,129,0.2)">
+      <div class="cluster-pillar" style="background:rgba(16,185,129,0.1);color:var(--accent3)">PILLAR: Daredevil Born Again S2 — Complete Guide: Cast, Episodes, Marvel Connections</div>
+      <div class="cluster-support" style="border-color:rgba(16,185,129,0.3)">
+        <div class="cluster-item"><strong style="color:var(--accent3)">Weekly Episode Recaps</strong> — 8 episodes = 8 weeks of recurring traffic</div>
+        <div class="cluster-item"><strong style="color:var(--accent3)">Marvel Easter Eggs</strong> — "daredevil born again marvel connections"</div>
+        <div class="cluster-item"><strong style="color:var(--accent3)">Kingpin Theory</strong> — "kingpin plan explained born again"</div>
+        <div class="cluster-item"><strong style="color:var(--accent3)">Comics Comparison</strong> — "daredevil born again comic vs show"</div>
+        <div class="cluster-item"><strong style="color:var(--accent3)">MCU Street-Level Timeline</strong> — broad authority piece across Marvel</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONETIZATION -->
+  <div class="panel" id="monetization">
+    <div class="section-title"><span class="icon">💰</span> Revenue Opportunities by Topic</div>
+    <div class="grid-2">
+      <div class="card revenue-card">
+        <div class="card-header">
+          <div><div class="card-title">Steel Ball Run</div><div class="card-sub">Anime — Netflix</div></div>
+          <span class="badge badge-anime">Anime</span>
+        </div>
+        <div style="margin-top:12px">
+          <div style="font-size:12px;color:var(--text-dim);margin-bottom:4px;font-weight:600">AFFILIATE</div>
+          <div style="font-size:13px">Netflix sub referrals, JoJo manga box sets (Amazon), Steel Ball Run figures, Crunchyroll manga links</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:10px;margin-bottom:4px;font-weight:600">SPONSORED</div>
+          <div style="font-size:13px">Crunchyroll or manga retailers → "JoJo Week" branded series</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:10px;margin-bottom:4px;font-weight:600">AD STRATEGY</div>
+          <div style="font-size:13px">High-CPM anime audience. Pre-roll video on episode reviews.</div>
+        </div>
+      </div>
+      <div class="card revenue-card">
+        <div class="card-header">
+          <div><div class="card-title">Crimson Desert</div><div class="card-sub">Gaming — PC/Console</div></div>
+          <span class="badge badge-gaming">Gaming</span>
+        </div>
+        <div style="margin-top:12px">
+          <div style="font-size:12px;color:var(--text-dim);margin-bottom:4px;font-weight:600">AFFILIATE</div>
+          <div style="font-size:13px">Steam/console purchase links, gaming peripherals (controllers, monitors), gaming chairs/headsets in guides</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:10px;margin-bottom:4px;font-weight:600">SPONSORED</div>
+          <div style="font-size:13px">NVIDIA/AMD → "Can Your PC Run Crimson Desert?" performance guide</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:10px;margin-bottom:4px;font-weight:600">AD STRATEGY</div>
+          <div style="font-size:13px">Gaming = premium CPM. Embed comparison widgets. Guide pages = high time-on-page.</div>
+        </div>
+      </div>
+      <div class="card revenue-card">
+        <div class="card-header">
+          <div><div class="card-title">Daredevil Born Again S2</div><div class="card-sub">Marvel — Disney+</div></div>
+          <span class="badge badge-marvel">Marvel</span>
+        </div>
+        <div style="margin-top:12px">
+          <div style="font-size:12px;color:var(--text-dim);margin-bottom:4px;font-weight:600">AFFILIATE</div>
+          <div style="font-size:13px">Disney+ sub referrals, Marvel Unlimited comics, Daredevil trade paperbacks (Amazon), merch</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:10px;margin-bottom:4px;font-weight:600">SPONSORED</div>
+          <div style="font-size:13px">Disney+ or Marvel → branded weekly recap series partnership</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:10px;margin-bottom:4px;font-weight:600">AD STRATEGY</div>
+          <div style="font-size:13px">Marvel content = consistently high engagement. Max display ad density on recaps.</div>
+        </div>
+      </div>
+      <div class="card revenue-card">
+        <div class="card-header">
+          <div><div class="card-title">JJK Season 3</div><div class="card-sub">Anime — Multi-platform</div></div>
+          <span class="badge badge-anime">Anime</span>
+        </div>
+        <div style="margin-top:12px">
+          <div style="font-size:12px;color:var(--text-dim);margin-bottom:4px;font-weight:600">AFFILIATE</div>
+          <div style="font-size:13px">Crunchyroll, Netflix, Hulu subs. JJK manga volumes, figures, merch on Amazon</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:10px;margin-bottom:4px;font-weight:600">SPONSORED</div>
+          <div style="font-size:13px">Anime merch retailers → "JJK Culling Game Collection" branded piece</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:10px;margin-bottom:4px;font-weight:600">AD STRATEGY</div>
+          <div style="font-size:13px">JJK = FandomWire's highest-traffic anime vertical. Premium ad slots.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BD -->
+  <div class="panel" id="bd">
+    <div class="section-title"><span class="icon">🎯</span> Companies to Pitch This Week</div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card bd-card" style="padding-left:24px">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Netflix — Anime & Film Division</div>
+            <div class="card-sub">Steel Ball Run premieres TODAY. JOJOCARAVAN expanding to 17 US stores.</div>
+          </div>
+          <div class="revenue-amount">$10K–$20K</div>
+        </div>
+        <div style="font-size:13px;margin-top:8px"><strong style="color:var(--accent)">Deal:</strong> Sponsored "Steel Ball Run Weekly Recap" series. FandomWire = Netflix's editorial amplification partner for the JoJo run.</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:6px"><strong>Angle:</strong> "We're publishing Steel Ball Run coverage starting today — 5-article cluster targeting every major keyword. Let's make this a partnership."</div>
+      </div>
+      <div class="card bd-card" style="padding-left:24px">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Pearl Abyss (Crimson Desert)</div>
+            <div class="card-sub">Crimson Desert launches TODAY. 400K Steam pre-orders. They need coverage + community content.</div>
+          </div>
+          <div class="revenue-amount">$5K–$10K</div>
+        </div>
+        <div style="font-size:13px;margin-top:8px"><strong style="color:var(--accent)">Deal:</strong> Sponsored beginner's guide series + community build showcases. Creator Program editorial partnership.</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:6px"><strong>Angle:</strong> "FandomWire is building a full Crimson Desert content hub — review, guides, boss walkthroughs. Let's amplify together."</div>
+      </div>
+      <div class="card bd-card" style="padding-left:24px">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Disney+ / Marvel Television</div>
+            <div class="card-sub">Daredevil Born Again S2 drops March 24. Jessica Jones return. 8-episode weekly run.</div>
+          </div>
+          <div class="revenue-amount">$15K–$25K</div>
+        </div>
+        <div style="font-size:13px;margin-top:8px"><strong style="color:var(--accent)">Deal:</strong> Sponsored weekly episode recap series with Disney+ branding. 8 weeks of content.</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:6px"><strong>Angle:</strong> "We're building a Daredevil Born Again hub with episode-by-episode SEO coverage. Let's partner on amplification."</div>
+      </div>
+      <div class="card bd-card" style="padding-left:24px">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Crunchyroll</div>
+            <div class="card-sub">JJK S3 finale March 26. Spring 2026 season starting. They need editorial partners for subscriber acquisition.</div>
+          </div>
+          <div class="revenue-amount">$5K–$15K</div>
+        </div>
+        <div style="font-size:13px;margin-top:8px"><strong style="color:var(--accent)">Deal:</strong> Branded "Spring 2026 Anime Preview" or "Weekly Anime Roundup presented by Crunchyroll." Affiliate + sponsored hybrid.</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:6px"><strong>Angle:</strong> "FandomWire covers the top anime every season. Let's make our Spring 2026 preview a Crunchyroll partnership."</div>
+      </div>
+      <div class="card bd-card" style="padding-left:24px">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Bandai Namco</div>
+            <div class="card-sub">Behind JoJo, Dragon Ball, One Piece game adaptations. Shifting investment post-My Hero Ultra Impact.</div>
+          </div>
+          <div class="revenue-amount">$5K–$10K</div>
+        </div>
+        <div style="font-size:13px;margin-top:8px"><strong style="color:var(--accent)">Deal:</strong> Sponsored coverage of upcoming anime game launches. Editorial package covering their IP ecosystem.</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:6px"><strong>Angle:</strong> "We're the intersection of anime + gaming coverage. Let's build a content partnership around your upcoming titles."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEM -->
+  <div class="panel" id="system">
+    <div class="section-title"><span class="icon">⚙️</span> Dashboard Improvements — Recommended</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px">🔴 Launch Day Alert Widget</div>
+        <div style="font-size:13px;color:var(--text-dim)">When a major game, anime, or show premieres TODAY, display a red banner: auto-populated from the release calendar with suggested article types.</div>
+        <div class="widget-preview">
+          <div class="label">Preview</div>
+          <div style="background:rgba(239,68,68,0.15);padding:8px 12px;border-radius:4px;font-size:12px;color:var(--accent5);font-weight:600">🔴 LAUNCH DAY: Steel Ball Run (Netflix) + Crimson Desert (PC/Console) — Publish reviews NOW</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px">💵 Revenue Per Article Estimator</div>
+        <div style="font-size:13px;color:var(--text-dim)">Attach estimated CPM and affiliate potential to each article recommendation. Editorial sees what to publish AND how much it could earn.</div>
+        <div class="widget-preview">
+          <div class="label">Preview</div>
+          <div style="font-size:12px;display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05)"><span>Steel Ball Run Review</span><span style="color:var(--accent)">~$850 est.</span></div>
+          <div style="font-size:12px;display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05)"><span>Crimson Desert Guide</span><span style="color:var(--accent)">~$1,200 est.</span></div>
+          <div style="font-size:12px;display:flex;justify-content:space-between;padding:4px 0"><span>JJK Ep 11 Recap</span><span style="color:var(--accent)">~$620 est.</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px">📊 Cluster Health Tracker</div>
+        <div style="font-size:13px;color:var(--text-dim)">For each active SEO cluster, show published vs pending articles. Green = complete, yellow = in progress, red = missing pieces.</div>
+        <div class="widget-preview">
+          <div class="label">Preview</div>
+          <div style="font-size:12px;margin-bottom:6px"><span style="color:var(--accent2)">Steel Ball Run</span> — 1/6 published</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:16%"></div></div>
+          <div style="font-size:12px;margin-top:8px;margin-bottom:6px"><span style="color:var(--accent)">Crimson Desert</span> — 0/6 published</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          <div style="font-size:12px;margin-top:8px;margin-bottom:6px"><span style="color:var(--accent3)">Daredevil BA S2</span> — 0/5 published (starts March 24)</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px">🔗 BD Pipeline + Content Connector</div>
+        <div style="font-size:13px;color:var(--text-dim)">When pitching a company, auto-surface all FandomWire content related to their IPs. Instant ammo for outreach emails and proposals.</div>
+        <div class="widget-preview">
+          <div class="label">Preview — Pitching Netflix</div>
+          <div style="font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05)">📄 "Steel Ball Run Ep 1 Review" — published today</div>
+          <div style="font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05)">📄 "Best JoJo Parts Ranked" — 12K monthly visits</div>
+          <div style="font-size:12px;padding:4px 0">📄 "One Piece Live Action S2 Guide" — 8K monthly visits</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = document.querySelectorAll('.tab');
+  const tabMap = {'overview':0,'discover':1,'editorial':2,'seo':3,'monetization':4,'bd':5,'system':6};
+  if (tabMap[id] !== undefined && tabs[tabMap[id]]) tabs[tabMap[id]].classList.add('active');
+  window.scrollTo({top: document.querySelector('.tabs').offsetTop, behavior: 'smooth'});
+}
+</script>
+
+</body>
+</html>

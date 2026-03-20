@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FandomWire Dashboard Widgets — March 19, 2026</title>
+<style>
+:root {
+  --bg: #080810;
+  --surface: #0e0e18;
+  --card: #131320;
+  --card-hover: #1a1a2e;
+  --border: #1e1e32;
+  --border-light: #2a2a42;
+  --accent: #f97316;
+  --accent-glow: rgba(249,115,22,0.15);
+  --blue: #3b82f6;
+  --blue-glow: rgba(59,130,246,0.12);
+  --green: #10b981;
+  --green-glow: rgba(16,185,129,0.12);
+  --red: #ef4444;
+  --red-glow: rgba(239,68,68,0.12);
+  --purple: #a855f7;
+  --purple-glow: rgba(168,85,247,0.12);
+  --yellow: #eab308;
+  --yellow-glow: rgba(234,179,8,0.12);
+  --text: #cbd5e1;
+  --text-dim: #64748b;
+  --text-bright: #f1f5f9;
+  --white: #ffffff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* HEADER */
+.dash-header {
+  background: linear-gradient(135deg, #0f0a1a 0%, #0a0f1a 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-logo { font-size: 20px; font-weight: 800; color: var(--white); display: flex; align-items: center; gap: 10px; }
+.dash-logo .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 8px var(--green)} 50%{opacity:.5;box-shadow:0 0 4px var(--green)} }
+.dash-logo span { font-size: 12px; font-weight: 500; color: var(--text-dim); margin-left: 4px; }
+.dash-meta { text-align: right; font-size: 12px; color: var(--text-dim); }
+.dash-meta strong { color: var(--accent); font-size: 14px; display: block; }
+
+/* ALERT BANNER */
+.launch-banner {
+  margin: 20px 28px 0;
+  background: linear-gradient(90deg, rgba(239,68,68,0.08), rgba(249,115,22,0.06), rgba(239,68,68,0.03));
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: 10px;
+  padding: 0;
+  overflow: hidden;
+  animation: bannerGlow 3s ease-in-out infinite;
+}
+@keyframes bannerGlow {
+  0%,100% { box-shadow: 0 0 0 rgba(239,68,68,0); }
+  50% { box-shadow: 0 0 20px rgba(239,68,68,0.08); }
+}
+.banner-top {
+  background: rgba(239,68,68,0.12);
+  padding: 8px 16px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid rgba(239,68,68,0.15);
+}
+.banner-pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: pulse2 1.5s infinite; }
+@keyframes pulse2 { 0%,100%{opacity:1} 50%{opacity:.3} }
+.banner-label { font-size: 10px; font-weight: 800; color: var(--red); text-transform: uppercase; letter-spacing: 1.5px; }
+.banner-time { margin-left: auto; font-size: 10px; color: rgba(239,68,68,0.6); }
+.banner-body { padding: 14px 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+.banner-item {
+  flex: 1; min-width: 200px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.banner-icon { font-size: 28px; }
+.banner-info h4 { font-size: 13px; font-weight: 700; color: var(--white); }
+.banner-info p { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.banner-info .action { font-size: 10px; color: var(--accent); font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; }
+.banner-info .action:hover { text-decoration: underline; }
+
+/* GRID */
+.widget-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px 28px;
+}
+@media (max-width: 1000px) { .widget-grid { grid-template-columns: 1fr; } }
+
+/* WIDGET CARD */
+.widget {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.widget:hover { border-color: var(--border-light); box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+.widget-header {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.widget-title { font-size: 13px; font-weight: 700; color: var(--white); display: flex; align-items: center; gap: 8px; }
+.widget-title .w-icon { font-size: 16px; }
+.widget-badge {
+  font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: 0.8px;
+}
+.widget-badge.live { background: var(--green-glow); color: var(--green); }
+.widget-badge.daily { background: var(--blue-glow); color: var(--blue); }
+.widget-badge.realtime { background: var(--red-glow); color: var(--red); }
+.widget-body { padding: 16px 18px; }
+
+/* REVENUE ESTIMATOR */
+.rev-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  transition: background 0.2s;
+  cursor: default;
+}
+.rev-row:hover { background: rgba(255,255,255,0.03); }
+.rev-left { display: flex; align-items: center; gap: 10px; }
+.rev-cat {
+  font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 3px;
+  text-transform: uppercase; letter-spacing: 0.5px; min-width: 50px; text-align: center;
+}
+.rev-cat.anime { background: var(--purple-glow); color: var(--purple); }
+.rev-cat.gaming { background: var(--blue-glow); color: var(--blue); }
+.rev-cat.marvel { background: var(--red-glow); color: var(--red); }
+.rev-title { font-size: 13px; color: var(--text); }
+.rev-right { display: flex; align-items: center; gap: 12px; }
+.rev-amount { font-size: 14px; font-weight: 800; color: var(--accent); }
+.rev-breakdown { font-size: 10px; color: var(--text-dim); }
+.rev-bar { height: 3px; border-radius: 2px; background: var(--border); margin-top: 2px; overflow: hidden; }
+.rev-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), #fb923c); }
+.rev-total {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 12px 0; margin-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.rev-total-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+.rev-total-value { font-size: 20px; font-weight: 800; color: var(--accent); }
+
+/* CLUSTER HEALTH */
+.cluster-row {
+  background: rgba(0,0,0,0.15);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.cluster-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.cluster-name { font-size: 13px; font-weight: 700; }
+.cluster-count { font-size: 11px; font-weight: 600; }
+.cluster-bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; margin-bottom: 10px; }
+.cluster-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+.cluster-articles { display: flex; flex-wrap: wrap; gap: 4px; }
+.cluster-chip {
+  font-size: 10px; padding: 3px 8px; border-radius: 4px;
+  border: 1px solid var(--border);
+}
+.cluster-chip.done { background: var(--green-glow); color: var(--green); border-color: rgba(16,185,129,0.3); }
+.cluster-chip.wip { background: var(--yellow-glow); color: var(--yellow); border-color: rgba(234,179,8,0.3); }
+.cluster-chip.todo { background: rgba(255,255,255,0.03); color: var(--text-dim); border-color: var(--border); }
+
+/* BD PIPELINE */
+.bd-company {
+  display: flex; align-items: stretch; gap: 0;
+  background: rgba(0,0,0,0.15);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  cursor: default;
+  transition: all 0.2s;
+}
+.bd-company:hover { border-color: var(--border-light); background: rgba(255,255,255,0.02); }
+.bd-accent { width: 3px; flex-shrink: 0; }
+.bd-content { padding: 10px 14px; flex: 1; display: flex; justify-content: space-between; align-items: center; }
+.bd-info h4 { font-size: 13px; font-weight: 700; color: var(--white); }
+.bd-info p { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.bd-articles { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; }
+.bd-article { font-size: 10px; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
+.bd-article::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.bd-right { text-align: right; }
+.bd-deal { font-size: 14px; font-weight: 800; }
+.bd-status {
+  font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px;
+  text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; display: inline-block;
+}
+
+/* TRENDING VELOCITY */
+.trend-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.trend-row:last-child { border-bottom: none; }
+.trend-rank { font-size: 18px; font-weight: 800; color: var(--accent); min-width: 28px; text-align: center; }
+.trend-info { flex: 1; }
+.trend-topic { font-size: 13px; font-weight: 600; color: var(--white); }
+.trend-meta { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+.trend-velocity {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 700;
+}
+.trend-arrow { font-size: 14px; }
+
+/* CONTENT FRESHNESS */
+.fresh-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.fresh-row:hover { background: rgba(255,255,255,0.02); }
+.fresh-title { font-size: 12px; color: var(--text); flex: 1; }
+.fresh-days { font-size: 11px; font-weight: 700; min-width: 60px; text-align: right; }
+.fresh-action { font-size: 10px; color: var(--accent); font-weight: 600; cursor: pointer; min-width: 60px; text-align: right; }
+
+/* OPPORTUNITY KEYWORDS */
+.kw-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.kw-row:hover { background: rgba(255,255,255,0.02); }
+.kw-term { font-size: 12px; color: var(--white); font-weight: 600; flex: 1; }
+.kw-metric { font-size: 11px; min-width: 70px; text-align: center; }
+.kw-imp { color: var(--blue); }
+.kw-ctr { color: var(--red); }
+.kw-opp { color: var(--green); font-weight: 700; }
+
+/* FULL WIDTH */
+.full-width { grid-column: 1 / -1; }
+
+/* PUBLISH QUEUE */
+.queue-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 14px;
+  background: rgba(0,0,0,0.1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  transition: all 0.2s;
+}
+.queue-item:hover { border-color: var(--accent); background: var(--accent-glow); }
+.queue-priority {
+  width: 32px; height: 32px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; flex-shrink: 0;
+}
+.queue-priority.p1 { background: var(--red-glow); color: var(--red); }
+.queue-priority.p2 { background: var(--accent-glow); color: var(--accent); }
+.queue-priority.p3 { background: var(--blue-glow); color: var(--blue); }
+.queue-info { flex: 1; }
+.queue-title { font-size: 13px; font-weight: 700; color: var(--white); }
+.queue-reason { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.queue-tags { display: flex; gap: 6px; margin-top: 4px; }
+.queue-tag { font-size: 9px; padding: 2px 6px; border-radius: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+.queue-right { text-align: right; }
+.queue-urgency { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.queue-est { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+/* RELEASE CALENDAR */
+.cal-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.cal-row:hover { background: rgba(255,255,255,0.02); }
+.cal-date {
+  min-width: 52px; text-align: center;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+.cal-day { font-size: 16px; font-weight: 800; color: var(--white); line-height: 1; }
+.cal-month { font-size: 9px; color: var(--text-dim); text-transform: uppercase; }
+.cal-info { flex: 1; }
+.cal-title { font-size: 12px; font-weight: 600; color: var(--white); }
+.cal-type { font-size: 10px; color: var(--text-dim); }
+.cal-suggest { font-size: 10px; color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="dash-header">
+  <div class="dash-logo">
+    <div class="dot"></div>
+    FandomWire Dashboard
+    <span>| Widgets v1.0</span>
+  </div>
+  <div class="dash-meta">
+    <strong>March 19, 2026</strong>
+    Last updated: 2 min ago
+  </div>
+</div>
+
+<!-- LAUNCH DAY ALERT -->
+<div class="launch-banner">
+  <div class="banner-top">
+    <div class="banner-pulse"></div>
+    <div class="banner-label">Launch Day Alert</div>
+    <div class="banner-time">Auto-detected from Release Calendar</div>
+  </div>
+  <div class="banner-body">
+    <div class="banner-item">
+      <div class="banner-icon">⚔️</div>
+      <div class="banner-info">
+        <h4>Steel Ball Run — Episode 1</h4>
+        <p>Netflix worldwide premiere today. Most hyped JoJo adaptation ever.</p>
+        <div class="action">Write Review + Explained &rarr;</div>
+      </div>
+    </div>
+    <div class="banner-item">
+      <div class="banner-icon">🏔️</div>
+      <div class="banner-info">
+        <h4>Crimson Desert — Full Launch</h4>
+        <p>PC/Console at 6PM ET. 400K Steam pre-orders. Metacritic: 79.</p>
+        <div class="action">Write Review + Beginner Guide &rarr;</div>
+      </div>
+    </div>
+    <div class="banner-item">
+      <div class="banner-icon">👊</div>
+      <div class="banner-info">
+        <h4>JJK Season 3 — Episode 11</h4>
+        <p>New episode today. Season finale March 26. Part 2 delayed to 2027.</p>
+        <div class="action">Write Recap + Delay News &rarr;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="widget-grid">
+
+  <!-- WHAT TO PUBLISH NEXT -->
+  <div class="widget full-width">
+    <div class="widget-header">
+      <div class="widget-title"><span class="w-icon">📝</span> What to Publish Next</div>
+      <span class="widget-badge realtime">Real-time</span>
+    </div>
+    <div class="widget-body">
+      <div class="queue-item">
+        <div class="queue-priority p1">1</div>
+        <div class="queue-info">
+          <div class="queue-title">Steel Ball Run Episode 1 Review & Explained</div>
+          <div class="queue-reason">Netflix premiere TODAY — first-mover advantage critical. Search volume spiking now.</div>
+          <div class="queue-tags">
+            <span class="queue-tag" style="background:var(--purple-glow);color:var(--purple)">Anime</span>
+            <span class="queue-tag" style="background:rgba(255,255,255,0.05);color:var(--text-dim)">Netflix</span>
+            <span class="queue-tag" style="background:rgba(255,255,255,0.05);color:var(--text-dim)">Review</span>
+          </div>
+        </div>
+        <div class="queue-right">
+          <div class="queue-urgency" style="color:var(--red)">Publish Now</div>
+          <div class="queue-est"></div>
+        </div>
+      </div>
+      <div class="queue-item">
+        <div class="queue-priority p1">2</div>
+        <div class="queue-info">
+          <div class="queue-title">Crimson Desert Review — Is It Worth Buying?</div>
+          <div class="queue-reason">400K Steam pre-orders. Metacritic 79 — polarizing reviews mean high search intent.</div>
+          <div class="queue-tags">
+            <span class="queue-tag" style="background:var(--blue-glow);color:var(--blue)">Gaming</span>
+            <span class="queue-tag" style="background:rgba(255,255,255,0.05);color:var(--text-dim)">PC/Console</span>
+            <span class="queue-tag" style="background:rgba(255,255,255,0.05);color:var(--text-dim)">Review</span>
+          </div>
+        </div>
+        <div class="queue-right">
+          <div class="queue-urgency" style="color:var(--red)">Publish Now</div>
+          <div class="queue-est"></div>
+        </div>
+      </div>
+      <div class="queue-item">
+        <div class="queue-priority p1">3</div>
+        <div class="queue-info">
+          <div class="queue-title">JJK Season 3 Episode 11 Recap & Breakdown</div>
+          <div class="queue-reason">Episode airs today. Part 2 delayed to 2027 — double the search intent.</div>
+          <div class="queue-tags">
+            <span class="queue-tag" style="background:var(--purple-glow);color:var(--purple)">Anime</span>
+            <span class="queue-tag" style="background:rgba(255,255,255,0.05);color:var(--text-dim)">Crunchyroll</span>
+            <span class="queue-tag" style="background:rgba(255,255,255,0.05);color:var(--text-dim)">Recap</span>
+          </div>
+        </div>
+        <div class="queue-right">
+          <div class="queue-urgency" style="color:var(--red)">Publish Now</div>
+          <div class="queue-est"></div>
+        </div>
+      </div>
+      <div class="queue-item">
+        <div class="queue-priority p2">4</div>
+        <div class="queue-info">
+          <div class="queue-title">Daredevil Born Again S2 — Everything to Know Before March 24</div>
+          <div class="queue-reason">5 days out. Jessica Jones return + James Wesley revival driving buzz.</div>
+          <div class="queue-tags">
+            <span class="queue-tag" style="background:var(--red-glow);color:var(--red)">Marvel</span>
+            <span class="queue-tag" style="background:rgba(255,255,255,0.05);color:var(--text-dim)">Disney+</span>
+            <span class="queue-tag" style="background:rgba(255,255,255,0.05);color:var(--text-dim)">Preview</span>
+          </div>
+        </div>
+        <div class="queue-right">
+          <div class="queue-urgency" style="color:var(--accent)">This Week</div>
+          <div class="queue-est"></div>
+        </div>
+      </div>
+      <div class="queue-item">
+        <div class="queue-priority p2">5</div>
+        <div class="queue-info">
+          <div class="queue-title">Crimson Desert Beginner's Guide — Tips, Controls & Combat</div>
+          <div class="queue-reason">Reviews cite difficult controls. Players will search for help within hours of launch.</div>
+          <div class="queue-tags">
+            <span class="queue-tag" style="background:var(--blue-glow);color:var(--blue)">Gaming</span>
+            <span class="queue-tag" style="background:rgba(255,255,255,0.05);color:var(--text-dim)">Guide</span>
+            <span class="queue-tag" style="background:rgba(255,255,255,0.05);color:var(--text-dim)">Evergreen</span>
+          </div>
+        </div>
+        <div class="queue-right">
+          <div class="queue-urgency" style="color:var(--accent)">Today</div>
+          <div class="queue-est"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT FRESHNESS TRACKER (replaced Revenue Estimator) -->
+  <div class="widget">
+    <div class="widget-header">
+      <div class="widget-title"><span class="w-icon">📅</span> Content Freshness</div>
+      <span class="widget-badge daily">Daily</span>
+    </div>
+    <div class="widget-body">
+      <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Evergreen articles needing update</div>
+      <div class="fresh-row">
+        <div class="fresh-title">GTA 6 — Everything We Know</div>
+        <div class="fresh-days" style="color:var(--red)">42 days</div>
+        <div class="fresh-action">Update &rarr;</div>
+      </div>
+      <div class="fresh-row">
+        <div class="fresh-title">Best Switch 2 Games 2026</div>
+        <div class="fresh-days" style="color:var(--red)">38 days</div>
+        <div class="fresh-action">Update &rarr;</div>
+      </div>
+      <div class="fresh-row">
+        <div class="fresh-title">Best Anime on Netflix 2026</div>
+        <div class="fresh-days" style="color:var(--yellow)">25 days</div>
+        <div class="fresh-action">Update &rarr;</div>
+      </div>
+      <div class="fresh-row">
+        <div class="fresh-title">Marvel Phase 6 Timeline</div>
+        <div class="fresh-days" style="color:var(--yellow)">21 days</div>
+        <div class="fresh-action">Update &rarr;</div>
+      </div>
+      <div class="fresh-row">
+        <div class="fresh-title">Best Free-to-Play Games 2026</div>
+        <div class="fresh-days" style="color:var(--yellow)">18 days</div>
+        <div class="fresh-action">Update &rarr;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLUSTER HEALTH TRACKER (expanded with pillar maps) -->
+  <div class="widget full-width">
+    <div class="widget-header">
+      <div class="widget-title"><span class="w-icon">📊</span> Cluster Health Tracker — Pillars & Supporting Articles</div>
+      <span class="widget-badge daily">Daily</span>
+    </div>
+    <div class="widget-body">
+
+      <!-- CLUSTER 1: STEEL BALL RUN -->
+      <div class="cluster-row" style="border-left:3px solid var(--blue)">
+        <div class="cluster-top">
+          <div class="cluster-name" style="color:var(--blue)">🔵 Steel Ball Run</div>
+          <div class="cluster-count" style="color:var(--red)">1 / 7 published</div>
+        </div>
+        <div class="cluster-bar"><div class="cluster-fill" style="width:14%;background:var(--blue)"></div></div>
+
+        <!-- PILLAR -->
+        <div style="margin:10px 0 8px;padding:10px 12px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:6px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:9px;font-weight:800;color:var(--blue);background:rgba(59,130,246,0.15);padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:1px">Pillar</span>
+            <span class="cluster-chip todo" style="margin:0;font-size:9px">Not Started</span>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--white)">Steel Ball Run — Complete Guide: Story, Characters, Netflix Schedule</div>
+          <div style="font-size:10px;color:var(--text-dim);margin-top:4px">Target: "steel ball run guide" "jojo part 7 explained" | Hub for all SBR content</div>
+        </div>
+
+        <!-- SUPPORTING ARTICLES -->
+        <div style="display:flex;flex-direction:column;gap:4px;padding-left:14px;border-left:2px solid rgba(59,130,246,0.2);margin-left:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(234,179,8,0.05);border:1px solid rgba(234,179,8,0.15);border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">✏️</span>
+              <span style="font-size:12px;color:var(--white);font-weight:600">Ep 1 Review & Explained</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">steel ball run episode 1 explained</span>
+              <span class="cluster-chip wip" style="margin:0;font-size:9px">In Progress</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">Who Is Johnny Joestar? Character Guide</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">johnny joestar explained</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">Netflix Release Schedule — Every Episode Date</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">steel ball run release schedule</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">Anime vs Manga — Key Differences</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">steel ball run anime vs manga</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">Best JoJo Parts Ranked 2026</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">best jojo parts ranked</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">Steel Ball Run Stands & Powers Explained</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">steel ball run stands powers</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLUSTER 2: CRIMSON DESERT -->
+      <div class="cluster-row" style="border-left:3px solid var(--accent)">
+        <div class="cluster-top">
+          <div class="cluster-name" style="color:var(--accent)">🟠 Crimson Desert</div>
+          <div class="cluster-count" style="color:var(--red)">0 / 7 published</div>
+        </div>
+        <div class="cluster-bar"><div class="cluster-fill" style="width:0%;background:var(--accent)"></div></div>
+
+        <!-- PILLAR -->
+        <div style="margin:10px 0 8px;padding:10px 12px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:6px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:9px;font-weight:800;color:var(--accent);background:rgba(249,115,22,0.15);padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:1px">Pillar</span>
+            <span class="cluster-chip todo" style="margin:0;font-size:9px">Not Started</span>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--white)">Crimson Desert — Complete Guide: Review, Tips, Builds, Boss Fights</div>
+          <div style="font-size:10px;color:var(--text-dim);margin-top:4px">Target: "crimson desert guide" "crimson desert everything" | Hub for all CD content</div>
+        </div>
+
+        <!-- SUPPORTING ARTICLES -->
+        <div style="display:flex;flex-direction:column;gap:4px;padding-left:14px;border-left:2px solid rgba(249,115,22,0.2);margin-left:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(234,179,8,0.05);border:1px solid rgba(234,179,8,0.15);border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">✏️</span>
+              <span style="font-size:12px;color:var(--white);font-weight:600">Review — Is It Worth Buying?</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">crimson desert review worth it</span>
+              <span class="cluster-chip wip" style="margin:0;font-size:9px">In Progress</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(234,179,8,0.05);border:1px solid rgba(234,179,8,0.15);border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">✏️</span>
+              <span style="font-size:12px;color:var(--white);font-weight:600">Beginner's Guide — Tips & Combat</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">crimson desert beginner guide</span>
+              <span class="cluster-chip wip" style="margin:0;font-size:9px">In Progress</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">Best Builds & Combat Guide</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">crimson desert best builds</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">Boss Fight Guide — Every Major Boss</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">crimson desert boss fights</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">vs Elden Ring vs Black Myth Wukong</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">crimson desert vs elden ring</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">System Requirements & PC Performance</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">crimson desert PC settings</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLUSTER 3: DAREDEVIL -->
+      <div class="cluster-row" style="border-left:3px solid var(--green)">
+        <div class="cluster-top">
+          <div class="cluster-name" style="color:var(--green)">🟢 Daredevil Born Again S2</div>
+          <div class="cluster-count" style="color:var(--yellow)">0 / 6 — starts Mar 24</div>
+        </div>
+        <div class="cluster-bar"><div class="cluster-fill" style="width:0%;background:var(--green)"></div></div>
+
+        <!-- PILLAR -->
+        <div style="margin:10px 0 8px;padding:10px 12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:6px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:9px;font-weight:800;color:var(--green);background:rgba(16,185,129,0.15);padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:1px">Pillar</span>
+            <span class="cluster-chip todo" style="margin:0;font-size:9px">Not Started</span>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--white)">Daredevil Born Again S2 — Complete Guide: Cast, Episodes, Marvel Connections</div>
+          <div style="font-size:10px;color:var(--text-dim);margin-top:4px">Target: "daredevil born again season 2 guide" | Hub for 8-week recap engine</div>
+        </div>
+
+        <!-- SUPPORTING ARTICLES -->
+        <div style="display:flex;flex-direction:column;gap:4px;padding-left:14px;border-left:2px solid rgba(16,185,129,0.2);margin-left:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(234,179,8,0.05);border:1px solid rgba(234,179,8,0.15);border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">✏️</span>
+              <span style="font-size:12px;color:var(--white);font-weight:600">Everything to Know Before March 24</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">daredevil born again season 2</span>
+              <span class="cluster-chip wip" style="margin:0;font-size:9px">In Progress</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">Episode 1 Recap & Review</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">daredevil born again s2 ep 1</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">Mar 24</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">Every Marvel Connection & Easter Egg</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">daredevil marvel easter eggs</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">Kingpin's Plan Explained — Theory</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">kingpin daredevil born again</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:5px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12px">⬜</span>
+              <span style="font-size:12px;color:var(--text)">MCU Street-Level Hero Timeline</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--text-dim)">mcu street level heroes timeline</span>
+              <span class="cluster-chip todo" style="margin:0;font-size:9px">To Do</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AMAZON AFFILIATE OPPORTUNITIES -->
+  <div class="widget">
+    <div class="widget-header">
+      <div class="widget-title"><span class="w-icon">💰</span> Amazon Affiliate Links — Today's Articles</div>
+      <span class="widget-badge live">Amazon Associates</span>
+    </div>
+    <div class="widget-body">
+      <div style="font-size:11px;color:var(--text-dim);margin-bottom:12px;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px">Amazon product links to add before publishing. Use SiteStripe or Associates link builder. Tag all with rel="sponsored".</div>
+
+      <div class="bd-company">
+        <div class="bd-accent" style="background:var(--red)"></div>
+        <div class="bd-content">
+          <div class="bd-info">
+            <h4>Steel Ball Run Ep 1 Review</h4>
+            <p style="margin-top:2px">Anime review — manga + merch</p>
+            <div class="bd-articles">
+              <div class="bd-article">🔗 JoJo's Bizarre Adventure manga box set — mid-article</div>
+              <div class="bd-article">🔗 JoJo figures & collectibles — bottom of article</div>
+              <div class="bd-article">🔗 Stone Ocean / Steel Ball Run volumes — sidebar</div>
+            </div>
+          </div>
+          <div class="bd-right">
+            <div style="font-size:11px;color:var(--text-dim);text-align:right">3 products</div>
+            <div class="bd-status" style="background:rgba(0,230,118,0.1);color:var(--green)">High Intent</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bd-company">
+        <div class="bd-accent" style="background:var(--blue)"></div>
+        <div class="bd-content">
+          <div class="bd-info">
+            <h4>Crimson Desert Beginner Guide</h4>
+            <p style="margin-top:2px">Gaming guide — peripherals + gear</p>
+            <div class="bd-articles">
+              <div class="bd-article">🔗 Gaming mouse / keyboard bundles — mid-article</div>
+              <div class="bd-article">🔗 Gaming headsets (top sellers) — bottom</div>
+              <div class="bd-article">🔗 Gaming monitors for open-world RPGs — sidebar</div>
+            </div>
+          </div>
+          <div class="bd-right">
+            <div style="font-size:11px;color:var(--text-dim);text-align:right">3 products</div>
+            <div class="bd-status" style="background:rgba(0,230,118,0.1);color:var(--green)">High Intent</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bd-company">
+        <div class="bd-accent" style="background:var(--purple)"></div>
+        <div class="bd-content">
+          <div class="bd-info">
+            <h4>JJK Season 3 Ep 11 Recap</h4>
+            <p style="margin-top:2px">Anime recap — manga volumes</p>
+            <div class="bd-articles">
+              <div class="bd-article">🔗 JJK manga Vol 25+ (latest arc) — mid-article</div>
+              <div class="bd-article">🔗 JJK complete box set — bottom</div>
+            </div>
+          </div>
+          <div class="bd-right">
+            <div style="font-size:11px;color:var(--text-dim);text-align:right">2 products</div>
+            <div class="bd-status" style="background:rgba(0,230,118,0.1);color:var(--green)">High Intent</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bd-company">
+        <div class="bd-accent" style="background:var(--accent)"></div>
+        <div class="bd-content">
+          <div class="bd-info">
+            <h4>Daredevil Born Again S2 Preview</h4>
+            <p style="margin-top:2px">Marvel preview — comics + merch</p>
+            <div class="bd-articles">
+              <div class="bd-article">🔗 Daredevil by Chip Zdarsky omnibus — mid-article</div>
+              <div class="bd-article">🔗 Marvel Legends Daredevil figure — bottom</div>
+            </div>
+          </div>
+          <div class="bd-right">
+            <div style="font-size:11px;color:var(--text-dim);text-align:right">2 products</div>
+            <div class="bd-status" style="background:rgba(255,193,7,0.1);color:var(--yellow)">Medium</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;padding:10px;background:rgba(255,153,0,0.08);border:1px solid rgba(255,153,0,0.2);border-radius:6px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text)">Amazon Associates — Today</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:2px">10 product links across 4 articles — manga, figures, gaming peripherals, comics</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:#ff9900;font-weight:600">Amazon Only</div>
+          <div style="font-size:10px;color:var(--text-dim)">SEO safe</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRENDING VELOCITY -->
+  <div class="widget">
+    <div class="widget-header">
+      <div class="widget-title"><span class="w-icon">🚀</span> Trending Velocity</div>
+      <span class="widget-badge realtime">Real-time</span>
+    </div>
+    <div class="widget-body">
+      <div class="trend-row">
+        <div class="trend-rank">1</div>
+        <div class="trend-info">
+          <div class="trend-topic">Steel Ball Run</div>
+          <div class="trend-meta">Netflix premiere • Reddit + Twitter + YouTube</div>
+        </div>
+        <div class="trend-velocity" style="color:var(--red)"><span class="trend-arrow">⬆</span> +340%</div>
+      </div>
+      <div class="trend-row">
+        <div class="trend-rank">2</div>
+        <div class="trend-info">
+          <div class="trend-topic">Crimson Desert</div>
+          <div class="trend-meta">Game launch • Steam + YouTube + Reddit</div>
+        </div>
+        <div class="trend-velocity" style="color:var(--red)"><span class="trend-arrow">⬆</span> +280%</div>
+      </div>
+      <div class="trend-row">
+        <div class="trend-rank">3</div>
+        <div class="trend-info">
+          <div class="trend-topic">JJK Part 2 Delayed</div>
+          <div class="trend-meta">News broke • Twitter + Reddit</div>
+        </div>
+        <div class="trend-velocity" style="color:var(--accent)"><span class="trend-arrow">⬆</span> +185%</div>
+      </div>
+      <div class="trend-row">
+        <div class="trend-rank">4</div>
+        <div class="trend-info">
+          <div class="trend-topic">Daredevil Born Again S2</div>
+          <div class="trend-meta">Trailer buzz • YouTube + Google Trends</div>
+        </div>
+        <div class="trend-velocity" style="color:var(--accent)"><span class="trend-arrow">⬆</span> +120%</div>
+      </div>
+      <div class="trend-row">
+        <div class="trend-rank">5</div>
+        <div class="trend-info">
+          <div class="trend-topic">Re:Zero Season 4</div>
+          <div class="trend-meta">Spring preview hype • Reddit + MyAnimeList</div>
+        </div>
+        <div class="trend-velocity" style="color:var(--green)"><span class="trend-arrow">⬆</span> +75%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPPORTUNITY KEYWORDS -->
+  <div class="widget">
+    <div class="widget-header">
+      <div class="widget-title"><span class="w-icon">🔑</span> Opportunity Keywords</div>
+      <span class="widget-badge daily">Daily</span>
+    </div>
+    <div class="widget-body">
+      <div class="kw-row" style="border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:6px">
+        <div class="kw-term" style="color:var(--text-dim);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Keyword</div>
+        <div class="kw-metric kw-imp" style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Impr.</div>
+        <div class="kw-metric kw-ctr" style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">CTR</div>
+        <div class="kw-metric kw-opp" style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Opp.</div>
+      </div>
+      <div class="kw-row">
+        <div class="kw-term">steel ball run episode 1</div>
+        <div class="kw-metric kw-imp">48K</div>
+        <div class="kw-metric kw-ctr">0.8%</div>
+        <div class="kw-metric kw-opp">Very High</div>
+      </div>
+      <div class="kw-row">
+        <div class="kw-term">crimson desert review</div>
+        <div class="kw-metric kw-imp">35K</div>
+        <div class="kw-metric kw-ctr">1.2%</div>
+        <div class="kw-metric kw-opp">Very High</div>
+      </div>
+      <div class="kw-row">
+        <div class="kw-term">jjk season 3 part 2</div>
+        <div class="kw-metric kw-imp">28K</div>
+        <div class="kw-metric kw-ctr">2.1%</div>
+        <div class="kw-metric kw-opp">High</div>
+      </div>
+      <div class="kw-row">
+        <div class="kw-term">daredevil born again season 2 cast</div>
+        <div class="kw-metric kw-imp">22K</div>
+        <div class="kw-metric kw-ctr">1.5%</div>
+        <div class="kw-metric kw-opp">High</div>
+      </div>
+      <div class="kw-row">
+        <div class="kw-term">spring 2026 anime</div>
+        <div class="kw-metric kw-imp">18K</div>
+        <div class="kw-metric kw-ctr">1.8%</div>
+        <div class="kw-metric kw-opp">Medium</div>
+      </div>
+      <div class="kw-row">
+        <div class="kw-term">crimson desert beginner guide</div>
+        <div class="kw-metric kw-imp">15K</div>
+        <div class="kw-metric kw-ctr">0.5%</div>
+        <div class="kw-metric kw-opp">High</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT FRESHNESS TRACKER -->
+  <div class="widget">
+    <div class="widget-header">
+      <div class="widget-title"><span class="w-icon">📅</span> Content Freshness</div>
+      <span class="widget-badge daily">Daily</span>
+    </div>
+    <div class="widget-body">
+      <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Evergreen articles needing update</div>
+      <div class="fresh-row">
+        <div class="fresh-title">GTA 6 — Everything We Know</div>
+        <div class="fresh-days" style="color:var(--red)">42 days</div>
+        <div class="fresh-action">Update &rarr;</div>
+      </div>
+      <div class="fresh-row">
+        <div class="fresh-title">Best Switch 2 Games 2026</div>
+        <div class="fresh-days" style="color:var(--red)">38 days</div>
+        <div class="fresh-action">Update &rarr;</div>
+      </div>
+      <div class="fresh-row">
+        <div class="fresh-title">Best Anime on Netflix 2026</div>
+        <div class="fresh-days" style="color:var(--yellow)">25 days</div>
+        <div class="fresh-action">Update &rarr;</div>
+      </div>
+      <div class="fresh-row">
+        <div class="fresh-title">Marvel Phase 6 Timeline</div>
+        <div class="fresh-days" style="color:var(--yellow)">21 days</div>
+        <div class="fresh-action">Update &rarr;</div>
+      </div>
+      <div class="fresh-row">
+        <div class="fresh-title">Best Free-to-Play Games 2026</div>
+        <div class="fresh-days" style="color:var(--yellow)">18 days</div>
+        <div class="fresh-action">Update &rarr;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELEASE CALENDAR -->
+  <div class="widget">
+    <div class="widget-header">
+      <div class="widget-title"><span class="w-icon">🗓️</span> Upcoming Releases</div>
+      <span class="widget-badge live">Live</span>
+    </div>
+    <div class="widget-body">
+      <div class="cal-row" style="background:var(--red-glow);border:1px solid rgba(239,68,68,0.2)">
+        <div class="cal-date">
+          <div class="cal-day">19</div>
+          <div class="cal-month">Mar</div>
+        </div>
+        <div class="cal-info">
+          <div class="cal-title" style="color:var(--red)">TODAY — Steel Ball Run + Crimson Desert + JJK Ep 11</div>
+          <div class="cal-type">Anime + Gaming</div>
+        </div>
+        <div class="cal-suggest">3 articles needed &rarr;</div>
+      </div>
+      <div class="cal-row">
+        <div class="cal-date">
+          <div class="cal-day">24</div>
+          <div class="cal-month">Mar</div>
+        </div>
+        <div class="cal-info">
+          <div class="cal-title">Daredevil: Born Again Season 2 Premiere</div>
+          <div class="cal-type">Marvel / Disney+</div>
+        </div>
+        <div class="cal-suggest">Preview + Recap ready</div>
+      </div>
+      <div class="cal-row">
+        <div class="cal-date">
+          <div class="cal-day">26</div>
+          <div class="cal-month">Mar</div>
+        </div>
+        <div class="cal-info">
+          <div class="cal-title">JJK S3 Finale + March 26 Game Mega-Drop</div>
+          <div class="cal-type">Anime + Gaming</div>
+        </div>
+        <div class="cal-suggest">2 articles needed</div>
+      </div>
+      <div class="cal-row">
+        <div class="cal-date">
+          <div class="cal-day">28</div>
+          <div class="cal-month">Mar</div>
+        </div>
+        <div class="cal-info">
+          <div class="cal-title">WonderCon 2026 — X-Men Panel, Marvel Reveals</div>
+          <div class="cal-type">Marvel / Comics</div>
+        </div>
+        <div class="cal-suggest">Preview article needed</div>
+      </div>
+      <div class="cal-row">
+        <div class="cal-date">
+          <div class="cal-day">5</div>
+          <div class="cal-month">Apr</div>
+        </div>
+        <div class="cal-info">
+          <div class="cal-title">One Piece Elbaf Arc + Spring 2026 Anime Season Start</div>
+          <div class="cal-type">Anime</div>
+        </div>
+        <div class="cal-suggest">Cluster prep needed</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
